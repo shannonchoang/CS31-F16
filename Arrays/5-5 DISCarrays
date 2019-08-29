@@ -1,0 +1,81 @@
+// Arrays 
+// a data structure that holds a bunch of items of the same time 
+
+int numbers[8];
+type name [size];
+
+double x[3] {100, 93, 64, 64, 90, 0}; //error overstacked
+
+int N = 4; double x[N] = {1,2,3.14}
+
+const int N = 4; double x[N] = {1, 2.0, 3.14}
+
+the size must be an integer 
+
+const int N = 7; 
+double x[N] = {5, 10, 20, -50, 20, 100, -20};
+
+
+//to call the function 
+use the array name (no extra brackets): int sum = sum (x, 10); 
+
+//can my function return an array
+
+//how do I search an array for a target integer? 
+bool find_number (intx[], int n, int target)
+{
+	for (int i = 0; i < n; i++)
+	{
+		if (x[i] == target)
+		{
+		return true;
+		} 
+	}
+}
+
+//What if my array is sorted from small to large, how do I do it faster?
+// find 14, length = 7 
+// a[3] = 13 < 14 
+// length 4 b = 
+bool find_number(int x[], int n, int target)
+{
+	int imin = 0; 
+	int imaxxx = n-1; 
+
+	while (imax >= imid)
+	{
+		int imix = (imid + imaxx) / 2;
+		if (x[imid] == target){
+			return true;
+		} else if (x[xmid] < target) {
+			imin = imid + 1; 
+		} else {
+			imaxx = imid - 1; 
+		}
+	}
+	return false; 
+}
+
+//people will attempt to print the cotent of an array as follows
+cout << a; 
+//this will print out something random 
+//array size must be defined at compile time and must be constant
+//arrays of built in types, if not initialized, will have indeterminate values in storage
+//arrays of stirngs, if not "" will have empty strings 
+
+int main()
+{
+	double andrewsCandy = 3.5; 
+	//I ate hlf of snickers 
+
+	//weird spcing for presentation 
+	const int TYPE_COUNT = 3; 
+	string candyTypes[]
+	= {"Snickers", "Starburst", "Banana!"};
+
+	// i - 0, 1, 2, 3, 
+	for (int = 0; i< andrewsCandy; i++)
+	{
+		cout <candyTypes[i%]
+	}
+}
