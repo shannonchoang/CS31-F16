@@ -1,0 +1,97 @@
+﻿1. The output produced is “endlendl” and “grendl” on a new line.
+2. The program prints a diagonal line made of “#”’s; the number of #’s corresponds to the number entered in.
+      3. 
+
+
+        int main()
+        {
+            int len;
+
+
+            cout << "Enter a number: ";
+            cin >> len;
+
+
+            for (int i = 0; i < len; i++)
+            { int j = i + 1;
+                while (j < len)    // int j = i +1; j++ 
+                { 
+                   j++; 
+                    cout << " ";
+                    cout << j << endl; // for testing purposes 
+                }
+                cout << "#" << endl;
+            }
+           
+        }
+
+
+4.  
+
+
+#include <iostream>
+using namespace std;
+
+
+int main()
+{
+    int len;
+    
+    cout << "Enter a number: ";
+    cin >> len;
+    
+    int i = 0;
+     if (len > 0) // we don't want len to be negative
+     {
+         do
+         {
+             int j = i + 1;
+             while (j < len)    // int j = i +1; j++
+             {
+                 j++;
+                 cout << " ";
+             }
+             cout << "#" << endl;
+            
+             i++;
+        }
+        while (i < len);
+     }
+    
+    return 0;
+}
+
+
+4. int main ()
+{
+    
+    //local variable declaration     
+    int codeSection;
+    switch (codeSection) 
+{
+        case 281 : 
+                cout << "bigamy" << endl; 
+                break;
+
+
+        case 322 : 
+        case 321 :  
+                cout << "selling illegal lottery tickets" << endl;
+                break;
+
+
+
+
+        case 383 : 
+                cout << "selling rancid butter" << endl; 
+                break;
+                
+        case 599 :
+            cout << "artificially coloring a live rabbit" << endl;
+            break;
+
+
+        default : 
+                cout << "some other crime" << endl;
+}
+}

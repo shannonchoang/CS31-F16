@@ -1,0 +1,138 @@
+﻿Shannon Hoang
+604787743
+Proj5 report
+Notable obstacles: 
+
+
+The largest obstacle was thinking of how to check if a word and a crib matched not just length-wise, but letter-ratio wise. In addition, realizing that checks had to be done both ways was a little tricky. I.e. (A gets B, but B also gets A). 
+
+
+Another  notable obstacle was covering all the edge cases that would lead to undefined behavior in the code. Some edge cases that were particularly troubling were: crib matches cannot transcend newlines. Additionally, if there are two matches for crib, one must be chosen. 
+
+
+
+
+Description of decrypt:
+...repeatedly 
+...for every word 
+Using the function bool match, checks if starting at word, what is in the cipher is a match for the crib lengthwise and letter ratio wise
+        If match is found, foundMap is true
+                If it does, and crib isn’t expended, seek next word 
+        Otherwise, seek next word if it doesn’t 
+If we weren’t able to find a match for crib return false print nothing 
+If we were able to find complete match, start decrypting message 
+
+
+
+
+Description of other functions that help decrypt: 
+isCharValid checks that two characters don’t map to the same character
+* It is used in bool match 
+Bool match
+        Makes sure that the crib is a valid entry 
+        Sets up a cipher map that will be used to decode  
+Continuously         
+        Seeks out next alphabetical letter in Cipher and Crib
+                If ran out of line of cipher or ran out of cipher break because crib not fulfilled
+        If we finish reading crib return true because match 
+Otherwise if we ran out of ciphertext before expending crib return false because it wasn’t a match
+
+
+Check is both cipher and crib  alphabetical letters 
+Convert to lowercase 
+And check if mapping is available for the crib character i.e. it hasn’t already been mapped, or mapping the same character
+        If have reached this point, and the crib and cipher aren’t agreeing, return false. 
+
+
+        
+
+
+//TEST CASES
+char ciph1[] = "bubble";
+        char crib1[] = "caceto";
+        char crib2[] = "puppie";
+        char mapping[26]; 
+        assert(findMapping(ciph1, crib1, mapping)==0);//return false, wrong letter ratio
+        assert(findMapping(ciph1, crib2, mapping)==1); //correct, letter ratio 
+        char c[] = "zu drvtry";
+        char b[] = "my secret";
+        assert(findMapping(c, b, mapping)==1); //true example with spaces 
+
+
+        char ciphertext[] = "Zqysrsuu jysqjtsgj bw zrquucwcsx cgwbytqjcbg cu xqgesybmu.\nNrsqus ysrsqus qgo xbzmtsgju obm qzhmcys jb Icfcrsqfu.\nXbg'j ysrsqus qgojdcge stvqyyquucge jb mu; is stvqyyquu bmyusrksu hmcjs isrr.\nzu 31 cu zdqrrsgecge!\0";
+        char crib[] = "classified information\0";
+
+
+//standard decryption case with spaces and newlines, non decrypted letters  should be lowercase, decrypted should be uppercase, non alphas should be unaltered
+assert(decrypt("Hirdd ejsy zu drvtry od.\nO'z fodvtrry.\n", "my secret")==1); 
+
+
+                
+
+
+        cout << ciphertext << endl;
+
+
+        //lengthMatch tests 
+        char crib3[] = "asdf bjjb"; 
+        char cipher1[] = "duck this poop";
+        //length matches 
+        assert(lengthMatch(cipher1, 5, crib3)==1);
+        //length isn't a match 
+        assert(lengthMatch(cipher1, 1, crib3)==0);  
+
+
+
+
+        //decrypt testcases 
+//standard decyphering
+char DblankCrib[] = " ";
+char DblankCrib2[0];
+char Dcrib2[] = "alsdkjflalaskdfjalkdf sdjg;alkdjg;alksdjf;alkdjsf"; 
+char Dcipher2[] = "the cat in boxx";
+char Dcrib3[] = "AAA"; //case of crib shouldn't matter
+char Dcrib4[] = "suz";  
+
+
+char Dcipher1[] = "Zqysrsuu jysqjtsgj bw zrquucwcsx cgwbytqjcbg cu xqgesybmu.\nNrsqus ysrsqus qgo xbzmtsgju obm qzhmcys jb Icfcrsqfu.\nXbg'j ysrsqus qgojdcge stvqyyquucge jb mu; is stvqyyquu bmyusrksu hmcjs isrr.\nzu 31 cu zdqrrsgecge!"; 
+char Dcrib1[] = "classified information"; 
+assert(decrypt(Dcipher1, Dcrib1)); 
+cout << "Above should read:\n CARELESS TREATMENT OF CLASSIFIED INFORMATION IS DANeEROmS.\nnLEASE RELEASE ANo DOCmMENTS oOm AChmIRE TO iIfILEAfS.\nDON'T RELEASE ANoTdINe EMvARRASSINe TO mS; iE EMvARRASS OmRSELkES hmITE iELL.\nCS 31 IS CdALLENeINe!" << endl;
+
+
+//TODO: ADDRESS THIS
+//crib string has no words, must return false & print nothing 
+cout<< "empty stringcrib prints:" << decrypt(Dcipher1, DblankCrib)<< endl;
+assert(decrypt(Dcipher2, DblankCrib) == 0); //empty string 
+assert(decrypt(Dcipher2, DblankCrib2) == 0);//no elements 
+//no match for crib possibly 
+assert(decrypt(Dcipher1, Dcrib2) == 0); //no match in length 
+assert(decrypt(Dcipher2, Dcrib3) == 0); //no match in letter ratio
+//two matches for crib; choose either 
+//TODO: when there's two matches, a word is being deleted 
+cout << "the two matches crib result was:" << endl;
+decrypt(Dcipher2, Dcrib4);
+assert(decrypt(Dcipher2, Dcrib4) == 1);
+
+
+//TODO: FIX THIS 
+//match for crib doesn't span multiple messages (separations by newlines)
+char Dcipher3[] ="bwra wmwt\nqeirtk spst\n"; 
+char Dcrib5[] = "alan turing";
+cout << "the match doesn't span multiple messages test" << endl;
+assert(decrypt(Dcipher3, Dcrib5) == 0);
+//only part of the crib matches, 
+char Dcrib6[] = "he oout";
+assert(decrypt(Dcipher2, Dcrib6) == 0); 
+
+
+//should return matches, and all should be printed the same way
+char Mcrib[] = "hush-hush until January 20, 2017";
+char Mcrib2[] = "   hush???hUSh---     --- until    JanuARY !!  ";
+char Mcrib3[] = "hush hush until january";
+char Mcipher[] = "DiebjiggK, zyxZYXzyx--Abca abCa    bdefg## $$hidbijk6437 wvuWVUwvu\n\n8 9\n";
+cout << "The next 3 decrypted messages should be print:"<< endl;
+cout << "NATURALLY, zyxzyxzyx--HUSH HUSH    UNTIL## $$JANUARY6437 wvuwvuwvu\n\n8 9\n" << endl;
+assert(decrypt(Mcipher, Mcrib)); //these should all print the same thing
+assert(decrypt(Mcipher, Mcrib2));
+assert(decrypt(Mcipher, Mcrib3));

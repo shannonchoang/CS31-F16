@@ -1,0 +1,242 @@
+Shannon Hoang
+6047877843
+DISC 1G
+TA: Duncan
+Report
+1. Notable obstacles
+Most of the notable obstacles included figuring out which functions would be necessary for certain phases of the projects. One issue was making sure that with every command the line stays within the grid. I solved this by writing the function called validDistance and implemented it in the execute commands functions. 
+        
+A notable obstacle in general was simply covering every case presented. The spec is so long and detailed that it’s very easy to miss specifications. For example, until I reread, the spec late sunday night, I didn’t realize that the way my program set “badPos” did not meet the specifications of the spec. Altering this took a bit of thought. 
+
+
+validPlotCmd was probably the hardest function to write because it handles so many cases. There’s the possibility of the negative distance + 1 digit, the negative distance + 2 digits, and so on. A lot of the times the solution was just noticing in areas where the code was redundant and unnecessary and other times just accepting when more code had to be written/altered.
+
+
+2. Description of program design
+        Prompts user for command strings, uses these to plot lines on the grid 
+Uses functions 2 main functions called plotLine and executeCommands to carry out commands
+Other functions were written to help the two main functions 
+
+
+validDistance: checks if commands are within grid scope
+        If line is moving rightward or downward
+                If moving horiz & command doesn’t place last point beyond column 30 
+                        Return true check remaining parameters
+                If moving vert & command doesn’t place last point beyond row 20 
+                        Return true 
+        If line moving leftward or upward check remaining parameters
+                If moving horiz & command doesn’t place last point below column 1
+                        Return true check remaining parameters
+                If moving vert & command doesn’t place last point below row 1
+                        Return true; check remaining parameters
+If all these are passed, distance is valid 
+
+
+
+
+plotLine checks if all  parameters are valid, and if so attempts to plot them 
+Checks… 
+        If direction is horizontal or vertical 
+        If Fgbg parameter is FG or BG (1 or 0)
+        If desired plotting character is printable (can show on the grid)
+        If starting rows and columns are within grid scope 
+        If command tries to move beyond grid scope using function validDistance
+                If any of these do not hold true do not allow plotting 
+If previous checks passed check
+        If distance is positive 
+If moving right, (horiz)
+repeatedly plot previously specified character in position, & increment column each time
+        If in foreground mode or if there’s available space
+
+
+If moving down (vert)
+repeatedly plot character in position; do until full line is plotted
+        If in foreground mode or if available space 
+                If distance is negative 
+                        If moving left (horiz)
+                                Repeatedly plot character in position 
+& deincrement column each time 
+        If in FG and space avail 
+                        If moving up (vert)
+                                Repeatedly plot character in position 
+& deincrement row each time 
+If in FG and space avail 
+If all the parameters passed and line successfully plotted return true 
+
+
+validFgBg
+        Repeatedly checks if the next character exists and if it’s printable 
+        If so, return true 
+
+
+validPlotCmd 
+        Returns true is command starting at specified position is valid
+        So V,v,H,h, must have digits (max 2) immediately after 
+
+
+                If string has another character and it is “-” 
+                        The digit is negative 
+Go to next char in string 
+
+
+If next character exists and it is a digit 
+        There is one digit, command is valid
+        If not the command was invalid, because no digits
+If next character after the last exists and it’s a digit
+        There are two digits, the command is valid 
+
+
+
+
+                If there was one digit 
+                        Set distance using digit (ones place only)
+                If two digits 
+                        Set distance using ones place and tens place 
+                Number of characters is equal to digits counted and additional (H or V or etc)
+                
+If distance was negative, take absolute value of distance
+Add one to number of characters because of ‘-’
+
+
+executeCommand: Executes commands in a string 
+Sets position to default row and column to 1 
+Starts distance and number of characters plotted at 0 
+        Repeatedly.. 
+        Reads through the entire command string looking for characters that cue commands 
+        Checks if these commands are valid ones using previously written functions 
+                If ‘f’ or ‘F’ is read 
+                        If invalid, mark which part of command string is invalid command 
+                If valid, set to FG mode and set plotting character
+                Move onto next possible command 
+                
+If ‘b’ or ‘B’ is read
+                        If invalid, mark which part of command is invalid 
+                If valid, set to BG mode and set plotting character
+                Move onto next possible command 
+
+
+                If ‘C, or c’ is read 
+                        Clear the grid 
+                        Move onto next command
+                        Reset the rows and columns and plotChar back to “*”
+                
+                If ‘H’ or ‘h’ is read 
+                        Check if this is a valid plot command syntactically
+                                If not mark what is wrong 
+                        Check if this is plot command stays in grid scope        
+                                If not mark what is wrong 
+                        If everything is okay, move onto the next command 
+                                Set column equal to original + distance moved 
+                If ‘V’ or ‘v’ is read 
+                        Check if this is a valid plot command syntactically 
+                                If not mark position of error
+                        Check if plot command stays in grid scope 
+                                If not mark position of error 
+                        If everything okay, move onto next command 
+                                Set row equal to original + distance traveled 
+                If the syntax is wrong and isn’t previously caught set position of error 
+Set constants 
+        HORIZ = 0 
+        VERT = 1 
+        Background = 0 
+        Foreground = 1 
+Int main 
+        Clears the grid 
+        Sets the plotting character to a “*”
+        Sets default mode to foreground
+        Infinitely..
+                Asks user to enter command string 
+        If command string empty exit loop 
+        Otherwise execute the commands 
+                If problems in commands, based on values returned, return error messages 
+                        If 0 returned, no errors, draw lines
+                        If 1 returned, syntax errors at specified position
+If 2 returned, command can’t be executed because of specified character in command string  
+
+3. Test cases
+Here are some test cases I ran 
+
+
+Note: 
+(int r, int c, int dir, int distance, char plotChar, int fgbg)
+
+
+//POS DIST HORIZ: 
+// prints rightward from 5, 1 by 6
+(plotLine (5, 1, 0, 6, '1', 1));
+* I wanted to make sure the line would plot correctly 
+
+
+// EDGE CASE: plotting just up to the edge and past
+//     assert(plotLine (1, 1, 0, 29, '1', 1));
+//     assert(!plotLine (1, 1, 0, 30, '1', 1));
+* I wanted to make sure points could be plotted up to the very edge but not past it
+
+
+/POS DIST VERT; FG/BG test 
+// prints downward from 5,1 by 6, 1st char shouldn't print 
+(plotLine (5, 1, 1, 6, '2', 0));
+* I wanted to make sure vertical lines plot correctly but also that if there was a character already in the space and the mode was BG that it wouldn’t print 
+
+
+//  NEG DIST HORIZ: 
+(plotLine (13, 17, 0, -5, '@', 0));
+* prints leftward from 17 by 5, checks if another printable character works
+
+
+Invalid Parameter tests 
+assert(!plotLine(20, 30, 0, 1, '!', 1)); 
+//     assert (!plotLine (20, 30, 1, 1, '!', 1));
+//     //bottom left corner left and down 
+//            assert (!plotLine (20, 1, 0, -1, '!', 1));
+//     assert (!plotLine (20, 1, 1, 1, '!', 1));
+//     //top left: left and up 
+//     assert (!plotLine (1, 1, 0, -1, '!', 1)); 
+//     plotLine (1, 1, 1, -1, '1', 1);
+//     //top right: right and up 
+//     assert (!plotLine (1, 30, 0, 1, '!', 1)); 
+//     assert (!plotLine (1, 30, 1, -1, '!', 1));
+* Reason for these tests, making sure that parameters that would go off the grid wouldn’t alter the grid at all or try to call setChar
+
+
+Command string tests: 
+string a = "f1";
+//         string b = "Fe";
+//         string c = "f";
+//         string d = "fë";
+//         int badPos = 0;
+//         assert (validFgBg(a, badPos));
+* This is a valid command so this should work 
+//         badPos = 0;
+//         assert (validFgBg (b, badPos));
+* Checks that this isn’t valid FgBg cause FgBg commands require a digit after
+//         badPos = 0;
+//         assert (!validFgBg(c, badPos) && badPos == 1);
+* Checks that this isn’t valid FgBg cause FgBg commands require a digit after 
+//         badPos = 0;
+//         assert (!validFgBg(d, badPos) && badPos == 1);
+* Checks that this isn’t a valid FgBg because ë isn’t printable 
+
+
+
+
+
+
+
+
+string A = "h12V3H-1B@v-3";
+
+
+        badPos = 0;
+assert (validPlotCmd(A, badPos, dist, numChar) && dist == 12);
+        badPos = 3;
+assert (validPlotCmd(A, badPos, dist, numChar) && dist == 3);
+        badPos = 5;
+assert (validPlotCmd(A, badPos, dist, numChar) && dist == -1);
+        badPos = 10;
+         assert (validPlotCmd(A, badPos, dist, numChar) && dist == -3);
+* These are all valid commands based off string A, i wanted to make sure that these were being recognized as valid commands being read off the string and that “distance” was being set correctly
+        
+          badPos = 8;
+         assert ((!validPlotCmd(A, badPos, dist, numChar)));
+* B@ is not a valid plot cmd so making sure that this is recognized
